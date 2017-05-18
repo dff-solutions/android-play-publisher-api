@@ -21,8 +21,11 @@ package com.google.play.developerapi.samples;
  */
 public final class ApplicationConfig {
 
-    private ApplicationConfig() {
-        // no instance
+    public enum properties {
+        APPLICATION_NAME,
+        PACKAGE_NAME,
+        SERVICE_ACCOUNT_EMAIL,
+        APK_FILE_PATH
     }
 
     /**
@@ -30,13 +33,11 @@ public final class ApplicationConfig {
      * {@code null} or blank, the application will log a warning. Suggested
      * format is "MyCompany-Application/1.0".
      */
-    static final String APPLICATION_NAME = "";
-
+    public static String APPLICATION_NAME;
     /**
      * Specify the package name of the app.
      */
-    static final String PACKAGE_NAME = "";
-
+    public static String PACKAGE_NAME;
     /**
      * Authentication.
      * <p>
@@ -48,7 +49,7 @@ public final class ApplicationConfig {
      * account email and add your key.p12 file to the resources directory.
      * </p>
      */
-    static final String SERVICE_ACCOUNT_EMAIL = "";
+    public static String SERVICE_ACCOUNT_EMAIL;
 
     /**
      * Specify the apk file path of the apk to upload, i.e. /resources/your_apk.apk
@@ -57,6 +58,6 @@ public final class ApplicationConfig {
      * samples.
      * </p>
      */
-    public static final String APK_FILE_PATH = "";
+    public static String APK_FILE_PATH;
 
 }

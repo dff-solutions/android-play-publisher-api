@@ -32,17 +32,15 @@ import com.google.api.client.util.store.DataStoreFactory;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.api.services.androidpublisher.AndroidPublisher;
 import com.google.api.services.androidpublisher.AndroidPublisherScopes;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
-
-import javax.annotation.Nullable;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Helper class to initialize the publisher APIs client library.
@@ -59,14 +57,22 @@ public class AndroidPublisherHelper {
 
     static final String MIME_TYPE_APK = "application/vnd.android.package-archive";
 
-    /** Path to the private key file (only used for Service Account auth). */
-    private static final String SRC_RESOURCES_KEY_P12 = "src/resources/key.p12";
+
+    public enum properties {
+        SRC_RESOURCES_KEY_P12,
+        RESOURCES_CLIENT_SECRETS_JSON
+    }
+
+    /**
+     * Path to the private key file (only used for Service Account auth).
+     */
+    public static String SRC_RESOURCES_KEY_P12;
 
     /**
      * Path to the client secrets file (only used for Installed Application
      * auth).
      */
-    private static final String RESOURCES_CLIENT_SECRETS_JSON = "/resources/client_secrets.json";
+    public static String RESOURCES_CLIENT_SECRETS_JSON = "/resources/client_secrets.json";
 
     /**
      * Directory to store user credentials (only for Installed Application
@@ -75,15 +81,21 @@ public class AndroidPublisherHelper {
     private static final String DATA_STORE_SYSTEM_PROPERTY = "user.home";
     private static final String DATA_STORE_FILE = ".store/android_publisher_api";
     private static final File DATA_STORE_DIR =
-            new File(System.getProperty(DATA_STORE_SYSTEM_PROPERTY), DATA_STORE_FILE);
+        new File(System.getProperty(DATA_STORE_SYSTEM_PROPERTY), DATA_STORE_FILE);
 
-    /** Global instance of the JSON factory. */
+    /**
+     * Global instance of the JSON factory.
+     */
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
-    /** Global instance of the HTTP transport. */
+    /**
+     * Global instance of the HTTP transport.
+     */
     private static HttpTransport HTTP_TRANSPORT;
 
-    /** Installed application user ID. */
+    /**
+     * Installed application user ID.
+     */
     private static final String INST_APP_USER_ID = "user";
 
     /**
@@ -93,18 +105,18 @@ public class AndroidPublisherHelper {
     private static FileDataStoreFactory dataStoreFactory;
 
     private static Credential authorizeWithServiceAccount(String serviceAccountEmail)
-            throws GeneralSecurityException, IOException {
+        throws GeneralSecurityException, IOException {
         log.info(String.format("Authorizing using Service Account: %s", serviceAccountEmail));
 
         // Build service account credential.
         GoogleCredential credential = new GoogleCredential.Builder()
-                .setTransport(HTTP_TRANSPORT)
-                .setJsonFactory(JSON_FACTORY)
-                .setServiceAccountId(serviceAccountEmail)
-                .setServiceAccountScopes(
-                        Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER))
-                .setServiceAccountPrivateKeyFromP12File(new File(SRC_RESOURCES_KEY_P12))
-                .build();
+            .setTransport(HTTP_TRANSPORT)
+            .setJsonFactory(JSON_FACTORY)
+            .setServiceAccountId(serviceAccountEmail)
+            .setServiceAccountScopes(
+                Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER))
+            .setServiceAccountPrivateKeyFromP12File(new File(SRC_RESOURCES_KEY_P12))
+            .build();
         return credential;
     }
 
@@ -119,10 +131,10 @@ public class AndroidPublisherHelper {
 
         // load client secrets
         GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(
-                JSON_FACTORY,
-                new InputStreamReader(
-                        AndroidPublisherHelper.class
-                                .getResourceAsStream(RESOURCES_CLIENT_SECRETS_JSON)));
+            JSON_FACTORY,
+            new InputStreamReader(
+                AndroidPublisherHelper.class
+                    .getResourceAsStream(RESOURCES_CLIENT_SECRETS_JSON)));
         // Ensure file has been filled out.
         checkClientSecretsFile(clientSecrets);
 
@@ -130,26 +142,26 @@ public class AndroidPublisherHelper {
 
         // set up authorization code flow
         GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow
-                .Builder(HTTP_TRANSPORT,
-                        JSON_FACTORY, clientSecrets,
-                        Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER))
-                        .setDataStoreFactory(dataStoreFactory).build();
+            .Builder(HTTP_TRANSPORT,
+            JSON_FACTORY, clientSecrets,
+            Collections.singleton(AndroidPublisherScopes.ANDROIDPUBLISHER))
+            .setDataStoreFactory(dataStoreFactory).build();
         // authorize
         return new AuthorizationCodeInstalledApp(
-                flow, new LocalServerReceiver()).authorize(INST_APP_USER_ID);
+            flow, new LocalServerReceiver()).authorize(INST_APP_USER_ID);
     }
 
     /**
      * Ensure the client secrets file has been filled out.
      *
      * @param clientSecrets the GoogleClientSecrets containing data from the
-     *            file
+     *                      file
      */
     private static void checkClientSecretsFile(GoogleClientSecrets clientSecrets) {
         if (clientSecrets.getDetails().getClientId().startsWith("[[INSERT")
-                || clientSecrets.getDetails().getClientSecret().startsWith("[[INSERT")) {
+            || clientSecrets.getDetails().getClientSecret().startsWith("[[INSERT")) {
             log.error("Enter Client ID and Secret from "
-                    + "APIs console into resources/client_secrets.json.");
+                + "APIs console into resources/client_secrets.json.");
             System.exit(1);
         }
     }
@@ -168,17 +180,17 @@ public class AndroidPublisherHelper {
     /**
      * Performs all necessary setup steps for running requests against the API.
      *
-     * @param applicationName the name of the application: com.example.app
+     * @param applicationName     the name of the application: com.example.app
      * @param serviceAccountEmail the Service Account Email (empty if using
-     *            installed application)
+     *                            installed application)
      * @return the {@Link AndroidPublisher} service
      * @throws GeneralSecurityException
      * @throws IOException
      */
     protected static AndroidPublisher init(String applicationName,
-            @Nullable String serviceAccountEmail) throws IOException, GeneralSecurityException {
+                                           @Nullable String serviceAccountEmail) throws IOException, GeneralSecurityException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(applicationName),
-                "applicationName cannot be null or empty!");
+            "applicationName cannot be null or empty!");
 
         // Authorization.
         newTrustedTransport();
@@ -191,12 +203,12 @@ public class AndroidPublisherHelper {
 
         // Set up and return API client.
         return new AndroidPublisher.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(applicationName)
-                .build();
+            HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(applicationName)
+            .build();
     }
 
     private static void newTrustedTransport() throws GeneralSecurityException,
-            IOException {
+        IOException {
         if (null == HTTP_TRANSPORT) {
             HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         }
