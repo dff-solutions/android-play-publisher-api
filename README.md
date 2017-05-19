@@ -1,5 +1,4 @@
-# Google Play Developer API 
-
+# Google Play Developer API - AUTO APK UPLOAD - TeamCity
 Java Software that deals with the Google Play Developer API via Google API Client Library **_`JAVA`_**.
 
 #### GOALS
@@ -33,6 +32,18 @@ _**Note:**_ To use the Google Play Developer API you need to create or reuse an 
 + `SERVICE_ACCOUNT_EMAIL`: Used for Authentication purposes, i.e. `_username@api-xyz-abc.iam.gserviceaccount.com_`
 + `APK_FILE_PATH`: Specify the apk file path of the apk to upload, i.e. `_C:\\..\\..\\your_apk.apk_`
 
+
+Here is an example of android-play-publisher.json
+
+```json
+{
+    "SRC_RESOURCES_KEY_P12" : "C:\\..\\..\\key.p12",
+    "APPLICATION_NAME"  : "Your Application Name",
+    "PACKAGE_NAME" : "com.my.package",
+    "SERVICE_ACCOUNT_EMAIL" : "username@api-xyz-abc.iam.gserviceaccount.com",
+    "APK_FILE_PATH" : "C:\\..\\..\\myapp.apk"
+}
+```
 
 > 
 ENJOY :-)
