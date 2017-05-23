@@ -1,6 +1,9 @@
 # Google Play Developer API - AUTO APK UPLOAD - TeamCity
 Java Software that deals with the Google Play Developer API via Google API Client Library **_`JAVA`_**.
 
+##@latest
++ 1.0.0
+
 #### GOALS
 
 - Quick **`Authentication`** via google authentication library - Oauth 2.0 or ClientLogin: requirements ?

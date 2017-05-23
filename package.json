@@ -1,0 +1,26 @@
+{
+  "name": "android-play-publisher-api",
+  "version": "1.0.0",
+  "description": "Java Software that deals with the Google Play Developer API via Google API Client Library **_`JAVA`_**.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dff-solutions/android-play-publisher-api.git"
+  },
+  "keywords": [
+    "JAVA",
+    "Google",
+    "API",
+    "Play",
+    "Store"
+  ],
+  "author": "Jose Alcerreca, Anthony Nahas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dff-solutions/android-play-publisher-api/issues"
+  },
+  "homepage": "https://github.com/dff-solutions/android-play-publisher-api#readme"
+}

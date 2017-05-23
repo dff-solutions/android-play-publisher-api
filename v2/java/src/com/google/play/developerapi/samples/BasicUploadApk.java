@@ -82,12 +82,6 @@ public class BasicUploadApk {
 
             // Upload new apk to developer console
 
-            /*
-            final String apkPath = BasicUploadApk.class
-                .getResource(ApplicationConfig.APK_FILE_PATH)
-                .toURI().getPath();
-            */
-
             final AbstractInputStreamContent apkFile =
                 new FileContent(AndroidPublisherHelper.MIME_TYPE_APK, new File(ApplicationConfig.APK_FILE_PATH));
 
@@ -104,25 +98,30 @@ public class BasicUploadApk {
             List<Integer> apkVersionCodes = new ArrayList<>();
             apkVersionCodes.add(apk.getVersionCode());
 
+            //Get t = edits.tracks().get(ApplicationConfig.PACKAGE_NAME, editId, TRACK_BETA);
+
             Update updateTrackRequest = edits
+                .tracks()
+                .update(ApplicationConfig.PACKAGE_NAME,
+                    editId,
+                    TRACK_BETA,
+                    new Track().setVersionCodes(apkVersionCodes));
+
+            Track updatedTrack = updateTrackRequest.execute();
+            log.info(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+
+            apkVersionCodes.clear();
+            apkVersionCodes.add(601);
+
+            Update updateTrackRequest2 = edits
                 .tracks()
                 .update(ApplicationConfig.PACKAGE_NAME,
                     editId,
                     TRACK_ALPHA,
                     new Track().setVersionCodes(apkVersionCodes));
 
-            Track updatedTrack = updateTrackRequest.execute();
-            log.info(String.format("Track %s has been updated.", updatedTrack.getTrack()));
-
-            Update updateTrackRequest2 = edits
-                .tracks()
-                .update(ApplicationConfig.PACKAGE_NAME,
-                    editId,
-                    TRACK_BETA,
-                    new Track().setVersionCodes(new ArrayList<>()));
-
-            Track updatedTrack2 =updateTrackRequest2.execute();
-            log.info(String.format("Track %s has been updated.", updatedTrack2.getTrack()));
+            Track updatedTrack2 = updateTrackRequest2.execute();
+            //log.info(String.format("Track %s has been updated.", updatedTrack2.getTrack()));
 
             // Commit changes for edit.
             Commit commitRequest = edits.commit(ApplicationConfig.PACKAGE_NAME, editId);

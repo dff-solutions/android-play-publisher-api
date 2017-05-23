@@ -24,6 +24,7 @@ public final class ApplicationConfig {
     public enum properties {
         APPLICATION_NAME,
         PACKAGE_NAME,
+        TRACK,
         SERVICE_ACCOUNT_EMAIL,
         APK_FILE_PATH
     }
@@ -38,6 +39,13 @@ public final class ApplicationConfig {
      * Specify the package name of the app.
      */
     public static String PACKAGE_NAME;
+
+    /**
+     * Track for uploading the apk, can be 'alpha', beta', 'production' or
+     * 'rollout'.
+     */
+    public static String TRACK;
+
     /**
      * Authentication.
      * <p>
