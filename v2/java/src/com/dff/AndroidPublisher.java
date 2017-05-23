@@ -1,13 +1,22 @@
 package com.dff;
 
 
-import com.google.play.developerapi.samples.*;
+import com.dff.helpers.FileHelper;
+import com.google.play.developerapi.samples.AndroidPublisherHelper;
+import com.google.play.developerapi.samples.ApplicationConfig;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Class that deals with the google play api in order to parse and perform multiple actions.
@@ -18,7 +27,17 @@ import java.io.IOException;
  */
 public class AndroidPublisher {
 
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException, ParseException, URISyntaxException {
+
+        FileHelper fileHelper = new FileHelper();
+
+        String x = fileHelper.getParentDirectoryPath();
+        fileHelper.getNodeModulesDir();
+
+        List<File> filesInFolder = Files.walk(Paths.get("C:\\git\\avLight.App"))
+            .filter(Files::isRegularFile)
+            .map(Path::toFile)
+            .collect(Collectors.toList());
 
         JSONParser parser = new JSONParser();
         //FileReader fileReader = new FileReader(new File("v2/java/src/resources/android-play-publisher2.json").getAbsolutePath());
@@ -35,9 +54,9 @@ public class AndroidPublisher {
 
         print(jsonObject);
 
-        ListApks.excute();
-        BasicUploadApk.execute();
-        ListApks.excute();
+//        ListApks.excute();
+//        BasicUploadApk.execute();
+//        ListApks.excute();
     }
 
     private static void print(Object o) {

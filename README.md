@@ -1,7 +1,7 @@
 # Google Play Developer API - AUTO APK UPLOAD - TeamCity
 Java Software that deals with the Google Play Developer API via Google API Client Library **_`JAVA`_**.
 
-##@latest
+## @latest
 + 1.0.0
 
 #### GOALS
@@ -46,6 +46,29 @@ Here is an example of android-play-publisher.json
     "SERVICE_ACCOUNT_EMAIL" : "username@api-xyz-abc.iam.gserviceaccount.com",
     "APK_FILE_PATH" : "C:\\..\\..\\myapp.apk"
 }
+```
+
+
+## Build
+
+For Intellij IDEA version 2017
+
+`File | Project Structure | Artifacts `
+then you should press alt+insert or click the plus icon and create new artifact choose
+ --> `jar` --> 
+ From modules **with dependencies**.
+
+Next goto `Build | Build artifacts` --> choose your artifact.
+
+
+## Run
+
+
+```sh
+anahas@ANAHAS-L MINGW64 /c/git/android-play-publisher-api/out/artifacts/android_play_publisher_api_jar (master)
+```
+```sh
+$ java -Dfile.encoding=windows-1252 -jar android-play-publisher-api.jar
 ```
 
 > 
