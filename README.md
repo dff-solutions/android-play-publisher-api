@@ -29,22 +29,24 @@ _**Note:**_ To use the Google Play Developer API you need to create or reuse an 
 
 2. **`android-play-publisher.json`** should provide the following keys. Otherwise the code will be broken
 
-+ `SRC_RESOURCES_KEY_P12`: Path to the private key file (only used for Service Account auth) i.e. `_C:\\..\\..\\key.p12_`
 + `APPLICATION_NAME`: Specify the name of your application. If the application name is., i,e. _ArriView LIGHT_
 + `PACKAGE_NAME`: Specify the package name of the app, i.e. ``_`de.dff.arriviewlight`_``
++ `TRACK`: Track for uploading the apk, can be '`alpha`', `beta`', '`production`' or '`rollout`'
 + `SERVICE_ACCOUNT_EMAIL`: Used for Authentication purposes, i.e. `_username@api-xyz-abc.iam.gserviceaccount.com_`
 + `APK_FILE_PATH`: Specify the apk file path of the apk to upload, i.e. `_C:\\..\\..\\your_apk.apk_`
++ `SRC_RESOURCES_KEY_P12`: Path to the private key file (only used for Service Account auth) i.e. `_C:\\..\\..\\key.p12_`
 
 
 Here is an example of android-play-publisher.json
 
 ```json
 {
-    "SRC_RESOURCES_KEY_P12" : "C:\\..\\..\\key.p12",
     "APPLICATION_NAME"  : "Your Application Name",
     "PACKAGE_NAME" : "com.my.package",
+    "TRACK": "alpha", 
     "SERVICE_ACCOUNT_EMAIL" : "username@api-xyz-abc.iam.gserviceaccount.com",
-    "APK_FILE_PATH" : "C:\\..\\..\\myapp.apk"
+    "APK_FILE_PATH" : "C:\\..\\..\\myapp.apk",
+    "SRC_RESOURCES_KEY_P12" : "C:\\..\\..\\key.p12"
 }
 ```
 
