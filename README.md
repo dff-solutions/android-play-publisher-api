@@ -2,7 +2,7 @@
 Java Software that deals with the Google Play Developer API via Google API Client Library **_`JAVA`_**.
 
 ## @latest
-+ 1.0.0
++ 1.1.0
 
 #### GOALS
 
@@ -31,11 +31,13 @@ _**Note:**_ To use the Google Play Developer API you need to create or reuse an 
 
 + `APPLICATION_NAME`: Specify the name of your application. If the application name is., i,e. _ArriView LIGHT_
 + `PACKAGE_NAME`: Specify the package name of the app, i.e. ``_`de.dff.arriviewlight`_``
-+ `TRACK`: Track for uploading the apk, can be '`alpha`', `beta`', '`production`' or '`rollout`'
++ `TRACK`: Track for uploading the apk, can be `none`,'`alpha`', `beta`', '`production`' or '`rollout`'
 + `SERVICE_ACCOUNT_EMAIL`: Used for Authentication purposes, i.e. `_username@api-xyz-abc.iam.gserviceaccount.com_`
 + `APK_FILE_PATH`: Specify the apk file path of the apk to upload, i.e. `_C:\\..\\..\\your_apk.apk_`
 + `SRC_RESOURCES_KEY_P12`: Path to the private key file (only used for Service Account auth) i.e. `_C:\\..\\..\\key.p12_`
 
+##### Note:
+If track == "`none`", the process will quit and will not be performed
 
 Here is an example of android-play-publisher.json
 
@@ -49,7 +51,6 @@ Here is an example of android-play-publisher.json
     "SRC_RESOURCES_KEY_P12" : "C:\\..\\..\\key.p12"
 }
 ```
-
 
 ## Build
 
@@ -72,6 +73,16 @@ anahas@ANAHAS-L MINGW64 /c/git/android-play-publisher-api/out/artifacts/android_
 ```sh
 $ java -Dfile.encoding=windows-1252 -jar android-play-publisher-api.jar
 ```
+
+##### Note:
+if APK_FILE_PATH does not provide a filename/path with the extension "apk" --> 
+java will expect the apk file name as java argument 
+-->
+```sh
+"C:\Program Files\Java\jdk1.8.0_111\bin\java" -Dfile.encoding=windows-1252 -jar C:\..\artifacts\android-play-publisher-api.jar _**android.apk**_
+```
+
+for more information: https://developers.google.com/android-publisher/
 
 > 
 ENJOY :-)

@@ -51,6 +51,7 @@ public class BasicUploadApk {
      */
 
     public enum Track_ {
+        none,
         alpha,
         beta,
         rollout,

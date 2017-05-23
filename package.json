@@ -1,6 +1,6 @@
 {
   "name": "android-play-publisher-api",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Java Software that deals with the Google Play Developer API via Google API Client Library **_`JAVA`_**.",
   "main": "index.js",
   "scripts": {
@@ -14,8 +14,10 @@
     "JAVA",
     "Google",
     "API",
-    "Play",
-    "Store"
+    "Play Store",
+    "Team City",
+    "Auto APK Upload",
+    "Android publisher"
   ],
   "author": "Jose Alcerreca, Anthony Nahas",
   "license": "ISC",

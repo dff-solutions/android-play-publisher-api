@@ -15,6 +15,18 @@ public class FileHelper {
     public FileHelper() {
     }
 
+    public String getFileExtension(String fileName) {
+        String extension = "";
+
+        int i = fileName.lastIndexOf('.');
+        int p = Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\'));
+
+        if (i > p) {
+            extension = fileName.substring(i + 1);
+        }
+        return extension;
+    }
+
     /**
      * Get the parent directory path of the current workplace
      *
