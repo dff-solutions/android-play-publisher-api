@@ -37,7 +37,7 @@ public class ListApks {
 
     private static final Log log = LogFactory.getLog(ListApks.class);
 
-    public static void excute() {
+    public static void execute() {
         try {
             Preconditions.checkArgument(!Strings.isNullOrEmpty(ApplicationConfig.PACKAGE_NAME),
                 "ApplicationConfig.PACKAGE_NAME cannot be null or empty!");

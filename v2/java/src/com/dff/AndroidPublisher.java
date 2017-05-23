@@ -1,22 +1,17 @@
 package com.dff;
 
 
-import com.dff.helpers.FileHelper;
 import com.google.play.developerapi.samples.AndroidPublisherHelper;
 import com.google.play.developerapi.samples.ApplicationConfig;
+import com.google.play.developerapi.samples.BasicUploadApk;
+import com.google.play.developerapi.samples.ListApks;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.security.GeneralSecurityException;
 
 /**
  * Class that deals with the google play api in order to parse and perform multiple actions.
@@ -27,21 +22,12 @@ import java.util.stream.Collectors;
  */
 public class AndroidPublisher {
 
-    public static void main(String[] args) throws IOException, ParseException, URISyntaxException {
-
-        FileHelper fileHelper = new FileHelper();
-
-        String x = fileHelper.getParentDirectoryPath();
-        fileHelper.getNodeModulesDir();
-
-        List<File> filesInFolder = Files.walk(Paths.get("C:\\git\\avLight.App"))
-            .filter(Files::isRegularFile)
-            .map(Path::toFile)
-            .collect(Collectors.toList());
+    public static void main(String[] args) throws IOException, ParseException, GeneralSecurityException {
 
         JSONParser parser = new JSONParser();
+        FileReader fileReader = new FileReader("android-play-publisher.json");
         //FileReader fileReader = new FileReader(new File("v2/java/src/resources/android-play-publisher2.json").getAbsolutePath());
-        FileReader fileReader = new FileReader("C:\\git\\avLight.App\\android-play-publisher.json");
+        //FileReader fileReader = new FileReader("C:\\git\\avLight.App\\android-play-publisher.json");
 
         Object object = parser.parse(fileReader);
         JSONObject jsonObject = (JSONObject) object;
@@ -52,11 +38,11 @@ public class AndroidPublisher {
         ApplicationConfig.APK_FILE_PATH = (String) jsonObject.get(ApplicationConfig.properties.APK_FILE_PATH.name());
         AndroidPublisherHelper.SRC_RESOURCES_KEY_P12 = (String) jsonObject.get(AndroidPublisherHelper.properties.SRC_RESOURCES_KEY_P12.name());
 
-        print(jsonObject);
+        print(jsonObject.toJSONString());
 
-//        ListApks.excute();
-//        BasicUploadApk.execute();
-//        ListApks.excute();
+        ListApks.execute();
+        BasicUploadApk.newInstance().execute();
+        ListApks.execute();
     }
 
     private static void print(Object o) {

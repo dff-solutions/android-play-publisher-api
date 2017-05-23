@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Uploads an apk to the alpha track.
+ * Uploads an apk to the target track.
  */
 public class BasicUploadApk {
 
@@ -57,79 +57,123 @@ public class BasicUploadApk {
         production
     }
 
-    private static final String TRACK_ALPHA = "alpha";
-    private static final String TRACK_BETA = "beta";
-    private static final String TRACK_PRODUCTION = "production";
-    private static final String TRACK_ROLLOUT = "rollout";
+    public static BasicUploadApk newInstance() {
+        return new BasicUploadApk();
+    }
 
-    public static void execute() {
-        try {
-            Preconditions.checkArgument(!Strings.isNullOrEmpty(ApplicationConfig.PACKAGE_NAME),
-                "ApplicationConfig.PACKAGE_NAME cannot be null or empty!");
+    private void checkArguments() {
+        Preconditions.checkArgument(!Strings.isNullOrEmpty(ApplicationConfig.PACKAGE_NAME),
+            "ApplicationConfig.PACKAGE_NAME cannot be null or empty!");
+    }
 
-            // Create the API service.
-            AndroidPublisher service = AndroidPublisherHelper.init(
-                ApplicationConfig.APPLICATION_NAME, ApplicationConfig.SERVICE_ACCOUNT_EMAIL);
-            final Edits edits = service.edits();
+    /**
+     * Create the API Service
+     *
+     * @return - the api service
+     * @throws IOException
+     * @throws GeneralSecurityException
+     */
+    private AndroidPublisher createAPIService() throws IOException, GeneralSecurityException {
+        return AndroidPublisherHelper.init(
+            ApplicationConfig.APPLICATION_NAME, ApplicationConfig.SERVICE_ACCOUNT_EMAIL);
+    }
 
-            // Create a new edit to make changes to your listing.
-            Insert editRequest = edits
-                .insert(ApplicationConfig.PACKAGE_NAME,
-                    null /** no content */);
-            AppEdit edit = editRequest.execute();
-            final String editId = edit.getId();
-            log.info(String.format("Created edit with id: %s", editId));
+    /**
+     * Create a new edit to make changes to the listing.
+     *
+     * @param edits - the new edit
+     * @return
+     * @throws IOException
+     */
+    private Insert createNewEdit(Edits edits) throws IOException {
+        return edits
+            .insert(ApplicationConfig.PACKAGE_NAME,
+                null /** no content */);
+    }
 
-            // Upload new apk to developer console
+    private AbstractInputStreamContent createNewFileContent() {
+        return new FileContent(AndroidPublisherHelper.MIME_TYPE_APK, new File(ApplicationConfig.APK_FILE_PATH));
+    }
 
-            final AbstractInputStreamContent apkFile =
-                new FileContent(AndroidPublisherHelper.MIME_TYPE_APK, new File(ApplicationConfig.APK_FILE_PATH));
-
-            Upload uploadRequest = edits
+    /**
+     * Upload new apk to developer console
+     *
+     * @param edits  the used edits
+     * @param editId the used edit id
+     * @return
+     * @throws IOException
+     */
+    private Upload uploadNewAPK(Edits edits, String editId) throws IOException {
+        return
+            edits
                 .apks()
-                .upload(ApplicationConfig.PACKAGE_NAME, editId, apkFile);
+                .upload(ApplicationConfig.PACKAGE_NAME, editId, createNewFileContent());
+    }
 
-            Apk apk = uploadRequest.execute();
-
-            log.info(String.format("Version code %d has been uploaded", apk.getVersionCode()));
-
-
-            // Assign apk to alpha track.
-            List<Integer> apkVersionCodes = new ArrayList<>();
-            apkVersionCodes.add(apk.getVersionCode());
-
-            //Get t = edits.tracks().get(ApplicationConfig.PACKAGE_NAME, editId, TRACK_BETA);
-
-            Update updateTrackRequest = edits
-                .tracks()
-                .update(ApplicationConfig.PACKAGE_NAME,
-                    editId,
-                    TRACK_BETA,
-                    new Track().setVersionCodes(apkVersionCodes));
-
-            Track updatedTrack = updateTrackRequest.execute();
-            log.info(String.format("Track %s has been updated.", updatedTrack.getTrack()));
-
-            apkVersionCodes.clear();
-            apkVersionCodes.add(601);
-
-            Update updateTrackRequest2 = edits
-                .tracks()
-                .update(ApplicationConfig.PACKAGE_NAME,
-                    editId,
-                    TRACK_ALPHA,
-                    new Track().setVersionCodes(apkVersionCodes));
-
-            Track updatedTrack2 = updateTrackRequest2.execute();
-            //log.info(String.format("Track %s has been updated.", updatedTrack2.getTrack()));
-
-            // Commit changes for edit.
-            Commit commitRequest = edits.commit(ApplicationConfig.PACKAGE_NAME, editId);
-            AppEdit appEdit = commitRequest.execute();
-            log.info(String.format("App edit with id %s has been comitted", appEdit.getId()));
-
-        } catch (IOException | GeneralSecurityException ex) {
-            log.error("Excpetion was thrown while uploading apk to alpha track", ex);
+    private void updateTrack(Edits edits, String editId, String track, int versionCode) throws IOException {
+        List<Integer> apkVersionCodes = new ArrayList<>();
+        if (versionCode != -1) {
+            apkVersionCodes.add(versionCode);
         }
+        Update updateTrackRequest = edits
+            .tracks()
+            .update(ApplicationConfig.PACKAGE_NAME,
+                editId,
+                track,
+                new Track().setVersionCodes(apkVersionCodes));
+
+        Track updatedTrack = updateTrackRequest.execute();
+        log.info(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+    }
+
+    /**
+     * Assign APK to target Track
+     *
+     * @param apk
+     * @param edits
+     * @param editId
+     * @throws IOException
+     */
+    private void assignAPKtoTargetTrack(Apk apk, Edits edits, String editId) throws IOException {
+        updateTrack(edits, editId, ApplicationConfig.TRACK.equals(Track_.alpha.name())
+            ? Track_.beta.name() : Track_.alpha.name(), -1);
+
+        updateTrack(edits, editId, ApplicationConfig.TRACK, apk.getVersionCode());
+    }
+
+    /**
+     * Commit changes for edit
+     *
+     * @param edits
+     * @param editId
+     * @throws IOException
+     */
+    private void commit(Edits edits, String editId) throws IOException {
+        Commit commitRequest = edits.commit(ApplicationConfig.PACKAGE_NAME, editId);
+        AppEdit appEdit = commitRequest.execute();
+        log.info(String.format("App edit with id %s has been comitted", appEdit.getId()));
+    }
+
+    /**
+     * Perform a new workflow by starting with arguments'check, creating new edit, upload then commit!
+     *
+     * @throws GeneralSecurityException
+     * @throws IOException
+     */
+    public void execute() throws GeneralSecurityException, IOException {
+
+        checkArguments();
+
+        final Edits edits = createAPIService().edits();
+        AppEdit edit = createNewEdit(edits).execute();
+        final String editId = edit.getId();
+        log.info(String.format("Created edit with id: %s", editId));
+
+        Apk apk = uploadNewAPK(edits, editId).execute();
+        log.info(String.format("Version code %d has been uploaded", apk.getVersionCode()));
+
+        assignAPKtoTargetTrack(apk, edits, editId);
+
+        commit(edits, editId);
     }
 }
