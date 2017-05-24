@@ -2,7 +2,7 @@
 Java Software that deals with the Google Play Developer API via Google API Client Library **_`JAVA`_**.
 
 ## @latest
-+ 1.1.1
++ 1.1.2
 
 #### GOALS
 
@@ -71,15 +71,20 @@ Next goto `Build | Build artifacts` --> choose your artifact.
 anahas@ANAHAS-L MINGW64 /c/git/android-play-publisher-api/out/artifacts/android_play_publisher_api_jar (master)
 ```
 ```sh
-$ java -Dfile.encoding=windows-1252 -jar android-play-publisher-api.jar
+$ java -Dfile.encoding=windows-1252 -jar android-play-publisher-api.jar alpha
 ```
 
+### args
+#### [0] - optional 
++ apk file name
+#### [1] - optional
++ track (alpha,beta...)
 ##### Note:
 if APK_FILE_PATH does not provide a filename/path with the extension "apk" --> 
 java will expect the apk file name as java argument 
 -->
 ```sh
-"C:\Program Files\Java\jdk1.8.0_111\bin\java" -Dfile.encoding=windows-1252 -jar C:\..\artifacts\android-play-publisher-api.jar _**android.apk**_
+"C:\Program Files\Java\jdk1.8.0_111\bin\java" -Dfile.encoding=windows-1252 -jar C:\..\artifacts\android-play-publisher-api.jar _**android.apk**_ alpha
 ```
 
 for more information: https://developers.google.com/android-publisher/

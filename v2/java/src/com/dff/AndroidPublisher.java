@@ -18,7 +18,7 @@ import java.security.GeneralSecurityException;
  * Class that deals with the google play api in order to parse and perform multiple actions.
  *
  * @author Anthony Nahas
- * @version 1.1.1
+ * @version 1.1.2
  * @since 18.05.2017
  */
 public class AndroidPublisher {
@@ -50,16 +50,24 @@ public class AndroidPublisher {
         if (!fileHelper.getFileExtension(ApplicationConfig.APK_FILE_PATH).equals("apk")) {
             System.out.println("apk extension has been not found --> expect apk file name as argument");
             String apkFileName;
+            String errorMessage = "Error: ";
             try {
+                errorMessage += "there was no apk path file found as well "
+                    + "in the android-play-publisher.json as in the arguments";
                 apkFileName = args[0];
-                System.out.println("args[0] has been found (apkFileName) --> " + apkFileName);
+                print("args[0] has been found (apkFileName) --> " + apkFileName);
                 ApplicationConfig.APK_FILE_PATH += apkFileName;
-                System.out.println("APK file path --> " + ApplicationConfig.APK_FILE_PATH);
+                print("APK file path --> " + ApplicationConfig.APK_FILE_PATH);
+                errorMessage = "no track found as argument at (args[1])";
+                String track = args[1];
+                print("args[1] has been found (track) --> " + track);
+                ApplicationConfig.TRACK = track;
+                print("Target Track --> " + ApplicationConfig.TRACK);
             } catch (Exception e) {
                 System.err.println(e
                     + System.getProperty("line.separator")
-                    + "there was no apk path file found as well "
-                    + "in the android-play-publisher.json as in the arguments");
+                    + errorMessage
+                );
             }
         }
 
