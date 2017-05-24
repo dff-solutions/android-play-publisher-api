@@ -125,7 +125,7 @@ public class BasicUploadApk {
 
         Track updatedTrack = updateTrackRequest.execute();
 
-        if (updatedTrack.getTrack() != null) {
+        if (updatedTrack != null) {
             log.info(String.format("Track %s has been updated.", updatedTrack.getTrack()));
         }
     }
