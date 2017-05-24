@@ -10,7 +10,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -27,8 +26,8 @@ public class AndroidPublisher {
     public static void main(String[] args) throws IOException, ParseException, GeneralSecurityException {
 
         JSONParser parser = new JSONParser();
-//        FileReader fileReader = new FileReader("android-play-publisher.json");
-        FileReader fileReader = new FileReader(new File("v2/java/src/resources/android-play-publisher2.json").getAbsolutePath());
+        FileReader fileReader = new FileReader("android-play-publisher.json");
+//        FileReader fileReader = new FileReader(new File("v2/java/src/resources/android-play-publisher2.json").getAbsolutePath());
         //FileReader fileReader = new FileReader("C:\\git\\avLight.App\\android-play-publisher.json");
 
         Object object = parser.parse(fileReader);
