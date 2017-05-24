@@ -124,7 +124,10 @@ public class BasicUploadApk {
                 new Track().setVersionCodes(apkVersionCodes));
 
         Track updatedTrack = updateTrackRequest.execute();
-        log.info(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+
+        if (updatedTrack.getTrack() != null) {
+            log.info(String.format("Track %s has been updated.", updatedTrack.getTrack()));
+        }
     }
 
     /**
