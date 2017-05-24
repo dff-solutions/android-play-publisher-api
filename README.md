@@ -2,7 +2,7 @@
 Java Software that deals with the Google Play Developer API via Google API Client Library **_`JAVA`_**.
 
 ## @latest
-+ 1.1.0
++ 1.1.1
 
 #### GOALS
 
