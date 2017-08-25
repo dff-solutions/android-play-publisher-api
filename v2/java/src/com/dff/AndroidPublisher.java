@@ -18,7 +18,7 @@ import java.security.GeneralSecurityException;
  * Class that deals with the google play api in order to parse and perform multiple actions.
  *
  * @author Anthony Nahas
- * @version 1.1.2
+ * @version 1.1.3
  * @since 18.05.2017
  */
 public class AndroidPublisher {
@@ -27,16 +27,13 @@ public class AndroidPublisher {
 
         JSONParser parser = new JSONParser();
         FileReader fileReader = new FileReader("android-play-publisher.json");
-//        FileReader fileReader = new FileReader(new File("v2/java/src/resources/android-play-publisher2.json").getAbsolutePath());
+        //FileReader fileReader = new FileReader(new File("v2/java/src/resources/android-play-publisher.json").getAbsolutePath());
         //FileReader fileReader = new FileReader("C:\\git\\avLight.App\\android-play-publisher.json");
 
         Object object = parser.parse(fileReader);
         JSONObject jsonObject = (JSONObject) object;
 
         ApplicationConfig.TRACK = (String) jsonObject.get(ApplicationConfig.properties.TRACK.name());
-        if (ApplicationConfig.TRACK.equals(BasicUploadApk.Track_.none.name()) || ApplicationConfig.TRACK.isEmpty()) {
-            return;
-        }
 
         ApplicationConfig.APPLICATION_NAME = (String) jsonObject.get(ApplicationConfig.properties.APPLICATION_NAME.name());
         ApplicationConfig.PACKAGE_NAME = (String) jsonObject.get(ApplicationConfig.properties.PACKAGE_NAME.name());
@@ -69,6 +66,10 @@ public class AndroidPublisher {
                     + errorMessage
                 );
             }
+        }
+
+        if (ApplicationConfig.TRACK.equals(BasicUploadApk.Track_.none.name()) || ApplicationConfig.TRACK.isEmpty()) {
+            return;
         }
 
         ListApks.execute();
